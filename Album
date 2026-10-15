@@ -1,0 +1,51 @@
+public class album {
+
+    public static int[] comprasNecessarias(int n, double[] metas) {
+        double[] p = new double[n + 1];
+        p[0] = 1.0;
+
+        int[] resposta = new int[metas.length];
+        int proximaMeta = 0;
+        int compras = 0;
+
+        while (proximaMeta < metas.length) {
+            compras++;
+            for (int i = n; i >= 1; i--) {
+                p[i] = p[i] * i / n + p[i - 1] * (n - i + 1) / n;
+            }
+            p[0] = 0.0;
+
+            while (proximaMeta < metas.length && p[n] > metas[proximaMeta]) {
+                resposta[proximaMeta] = compras;
+                proximaMeta++;
+            }
+        }
+        return resposta;
+    }
+
+    public static void main(String[] args) {
+        if (args.length < 1) {
+            System.err.println("Uso: java album <figurinhas>");
+            return;
+        }
+        int n;
+        try {
+            n = Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            System.err.println("Erro: informe um numero inteiro.");
+            return;
+        }
+        if (n < 1) {
+            System.err.println("Erro: o album deve ter pelo menos 1 figurinha.");
+            return;
+        }
+
+        int[] percentuais = {50, 75, 95};
+        double[] metas = {0.50, 0.75, 0.95};
+        int[] compras = comprasNecessarias(n, metas);
+
+        for (int j = 0; j < metas.length; j++) {
+            System.out.println("Para chegar a " + percentuais[j] + "% : comprar " + compras[j] + " figurinhas");
+        }
+    }
+}
